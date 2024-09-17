@@ -23,8 +23,6 @@ CalendarModal = require('../modals/CalendarModal.js');
 CombinedLogSearch = require('../modals/CombinedLogSearch.js');
 ConfirmModal = require('../modals/ConfirmModal.js');
 EmailForm = require('../modals/EmailForm.js');
-KnowledgeForm = require('../modals/KnowledgeForm.js');
-KnowledgeSearch = require('../modals/KnowledgeSearch.js');
 PersonDeviceForm = require('../modals/PersonDeviceForm.js');
 PersonForm = require('../modals/PersonForm.js');
 PersonPicker = require('../modals/PersonPicker.js');
@@ -158,7 +156,6 @@ module.exports = class DashboardModal extends Component {
         this.CalendarModal = null;
         this.ConfirmModal = null;
         this.EmailForm = null;
-        this.KnowledgeSearch = null;
         this.NotificationModal = null;
         this.PickerModal = null;
         this.ProductSearch = null;
@@ -432,13 +429,6 @@ module.exports = class DashboardModal extends Component {
         } catch (ex) {
             global.Log({Message: 'DashboardModal.ShowEmail>>' + ex.message, Notify: true});
         }
-    };    
-    ShowKnowledgeSearch(Params_Value) {
-        try {
-            this.KnowledgeSearch.Show(Params_Value);            
-        } catch (ex) {
-            global.Log({Message: 'DashboardModal.ShowKnowledgeSearch>>' + ex.message, Notify: true});
-        }
     };
     ShowPerson(Params_Value) {
         try {
@@ -486,9 +476,6 @@ module.exports = class DashboardModal extends Component {
                 this.ConfirmModal.BackHandler();
                 return true;
             } else if (this.EmailForm?.IsActive()) {
-                this.EmailForm.BackHandler();
-                return true;
-            } else if (this.KnowledgeSearch?.IsActive()) {
                 this.EmailForm.BackHandler();
                 return true;
             } else if (this.NotificationModal?.IsActive()) {
@@ -539,8 +526,6 @@ module.exports = class DashboardModal extends Component {
                 this.AccountForm.ActiveHandler();
             } else if (this.EmailForm?.IsActive()) {
                 this.EmailForm.ActiveHandler();
-            } else if (this.KnowledgeSearch?.IsActive()) {
-                this.KnowledgeSearch.ActiveHandler();
             } else if (this.PersonForm?.IsActive()) {
                 this.PersonForm.ActiveHandler();
             } else if (this.ProductSearch?.IsActive()) {
@@ -717,7 +702,6 @@ module.exports = class DashboardModal extends Component {
                     {this.renderOpacity()}
                     
                     <AccountForm ref={ele => this.AccountForm = ele} ModelID={this.props.ModelID + '_ZP2X7ZSM'} />
-                    <KnowledgeSearch ref={ele => this.KnowledgeSearch = ele} ModelID={this.props.ModelID + '_KS1P4ZSM'} />
                     <PersonForm ref={ele => this.PersonForm = ele} ModelID={this.props.ModelID + '_3TJQ95YN'} />
                     <ProductSearch ref={ele => this.ProductSearch = ele} ModelID={this.props.ModelID + '_4VXVVCT1'} />
                     <ReleaseForm ref={ele => this.ReleaseForm = ele} ModelID={this.props.ModelID + '_RF1VV5C1'} />
