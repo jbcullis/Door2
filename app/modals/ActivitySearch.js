@@ -96,7 +96,7 @@ module.exports = class ActivitySearch extends Component {
                         {/* Statistic List */}
                         <ScrollView style={{flex: 1, backgroundColor: Global.Theme.Body.BackgroundColor}}>
                             <View>
-                                <Text>here</Text>
+                                <Text>Activity Feed</Text>
                             </View>
                         </ScrollView>
                         

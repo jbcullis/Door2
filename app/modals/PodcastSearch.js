@@ -11,7 +11,7 @@ import {
     Platform,
 } from 'react-native';
 import ElementControl from '../controls/ElementControl.js';
-module.exports = class TransactionSearch extends Component {
+module.exports = class PodcastSearch extends Component {
     constructor(props) {
         super(props);
         this.Titlebar = null;
@@ -23,26 +23,20 @@ module.exports = class TransactionSearch extends Component {
         try {
             return Global.State.hasOwnProperty(this.props.ModelID) && Global.State[this.props.ModelID] !== null;
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.IsActive>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.IsActive>>' + ex.message});
         }
     };
     async Show() {
         try {
             global.root.NotificationModal.Show({ NotificationTitle: 'Loading...', NotificationStyle: 'Wait' });
-
-            let _Params = {
-                SearchLimit: 25,
-                SearchOffset: 0,
-            };
-
             Global.State[this.props.ModelID] = {
                 SearchID: null,
                 SearchTimeout: null,
                 SearchText: null,
                 SearchLimit: 25,
                 SearchOffset: 0,
-                SearchCount: await TransactionHelper.GetCount(_Params),
-                TransactionList: await TransactionHelper.GetList(_Params),
+                SearchCount: 0,
+                PodcastList: [],
                 LazyLoadEnabled: false,
             }
             this.forceUpdate();
@@ -50,7 +44,7 @@ module.exports = class TransactionSearch extends Component {
             global.root.NotificationModal.Hide();
         } catch (ex) {
             Global.State[this.props.ModelID] = null;
-            global.Log({Message: 'TransactionSearch.Show>>' + ex.message, Notify: true});
+            global.Log({Message: 'PodcastSearch.Show>>' + ex.message, Notify: true});
         }
     };
     Hide() {
@@ -59,86 +53,7 @@ module.exports = class TransactionSearch extends Component {
                 Global.State[this.props.ModelID] = null;
             }
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.Show>>' + ex.message});
-        }
-    };
-
-    async ExportList() {
-        try {
-            await global.root.NotificationModal.Show({ NotificationTitle: 'Loading...', NotificationStyle: 'Wait' });
-
-            let _Base64 = '';
-            _Base64 += 'Transaction,';
-            _Base64 += 'Reference,';
-            _Base64 += 'Account,';
-            _Base64 += 'Person,';
-            _Base64 += 'Date,';
-            _Base64 += 'Payment Method,';
-            _Base64 += 'Payment Date,';
-            _Base64 += 'Payment Reference,';
-            _Base64 += 'Payment Fee,';
-            _Base64 += 'Refund Method,';
-            _Base64 += 'Refund Date,';
-            _Base64 += 'Refund Reference,';
-            _Base64 += 'Refund Fee,';          
-            _Base64 += 'Item,';
-            _Base64 += 'Product,';
-            _Base64 += 'Quantity,';
-            _Base64 += 'Price,';
-            _Base64 += 'Comment,';
-            _Base64 += 'Subtotal,';
-            _Base64 += 'Tax,';
-            _Base64 += 'Tax Rate,';
-            _Base64 += 'Total,';
-            _Base64 += 'Currency,';
-            _Base64 += 'Exchange,';
-            _Base64 += 'Local Total,';
-            _Base64 += '\n';
-
-            for (let _TransactionIndex = 0; _TransactionIndex < Global.State[this.props.ModelID].TransactionList.length; _TransactionIndex++) {
-                let _Transaction = Global.State[this.props.ModelID].TransactionList[_TransactionIndex];
-                for (let _TransactionItemIndex = 0; _TransactionItemIndex < _Transaction.TransactionItemList.length; _TransactionItemIndex++) {
-                    let _TransactionItem = _Transaction.TransactionItemList[_TransactionItemIndex];
-                    _Base64 += _Transaction.TransactionNumber + ',';
-                    _Base64 += (_Transaction.TransactionReference !== null ? _Transaction.TransactionReference + ',' : ',');
-                    _Base64 += (_Transaction.TransactionAccount !== null ? _Transaction.TransactionAccount.AccountName + ',' : ',');
-                    _Base64 += (_Transaction.TransactionPerson !== null ? _Transaction.TransactionPerson.PersonName + ',' : ',');
-                    _Base64 += _Transaction.TransactionDate.toString() + ',';
-                    _Base64 += (_Transaction.TransactionPaymentType > 0 ? _Transaction.TransactionPaymentType + ',' : ',');
-                    _Base64 += (_Transaction.TransactionPaymentDate !== null ? _Transaction.TransactionPaymentDate.toString() + ',' : ',');
-                    _Base64 += (_Transaction.TransactionPaymentReference !== null ? _Transaction.TransactionPaymentReference + ',' : ',');
-                    _Base64 += (_Transaction.TransactionPaymentFee > 0 ? _Transaction.TransactionPaymentFee + ',' : ',');
-                    _Base64 += (_Transaction.TransactionRefundDate !== null ? _Transaction.TransactionRefundDate.toString() + ',' : ',');
-                    _Base64 += (_Transaction.TransactionRefundReference !== null ? _Transaction.TransactionRefundReference + ',' : ',');
-                    _Base64 += (_Transaction.TransactionRefundAmount !== null ? _Transaction.TransactionRefundAmount + ',' : ',');
-                    _Base64 += (Global.PadInteger(parseInt(_TransactionItemIndex + 1), 4) + ',');
-                    _Base64 += (Global.StringHasContent(_TransactionItem.TransactionItemDescription) ? _TransactionItem.TransactionItemDescription + ',' : ',');
-                    _Base64 += (_TransactionItem.TransactionItemQuantity + ',');
-                    _Base64 += (_TransactionItem.TransactionItemPrice + ',')
-                    _Base64 += (Global.StringHasContent(_TransactionItem.TransactionItemComment) ? _TransactionItem.TransactionItemComment + ',' : ',');
-                    _Base64 += _TransactionItem.TransactionItemSubtotal.toString() + ',';
-                    _Base64 += _TransactionItem.TransactionItemTax.toFixed(2) + ',';
-                    _Base64 += _TransactionItem.TransactionItemTaxRate.toString() + ',';
-                    _Base64 += _TransactionItem.TransactionItemTotal.toFixed(2) + ',';
-                    _Base64 += (Global.StringHasContent(_Transaction.TransactionCurrency) ? _Transaction.TransactionCurrency + ',' : ',');
-                    _Base64 += (_Transaction.TransactionExchange + ',');
-                    _Base64 += (parseFloat(_TransactionItem.TransactionItemTotal * _Transaction.TransactionExchange).toFixed(2) + ',');
-                    _Base64 += '\n';
-                }
-
-            }
-
-            await global.root.NotificationModal.Hide();
-
-            let _Buffer = Buffer.from(_Base64);
-            _Base64 = 'data:text/csv;base64,' + _Buffer.toString('base64');
-            await global.root.Export({
-                FileName: 'Transactions-' + Global.CreateTimestamp() + '.csv',
-                Base64: _Base64
-            });
-
-        } catch (ex) {
-            global.Log({Message: 'TransactionSearch.ExportList>>' + ex.message, Notify: true});
+            global.Log({Message: 'PodcastSearch.Show>>' + ex.message});
         }
     };
 
@@ -160,7 +75,7 @@ module.exports = class TransactionSearch extends Component {
             }
             this.forceUpdate();
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.Search>>' + ex.message, Notify: true});
+            global.Log({Message: 'PodcastSearch.Search>>' + ex.message, Notify: true});
         }
     };
     async Update(Transaction_Value) {
@@ -178,7 +93,7 @@ module.exports = class TransactionSearch extends Component {
             }
             this.forceUpdate();
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.Update>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.Update>>' + ex.message});
         }
     };
     async Delete(Transaction_Value) {
@@ -191,7 +106,7 @@ module.exports = class TransactionSearch extends Component {
             }
             this.forceUpdate();
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.Delete>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.Delete>>' + ex.message});
         }
     };
     ClearFocus() {
@@ -203,7 +118,7 @@ module.exports = class TransactionSearch extends Component {
                 Keyboard.dismiss();
             }
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.ClearFocus>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.ClearFocus>>' + ex.message});
         }
     };
 
@@ -212,28 +127,28 @@ module.exports = class TransactionSearch extends Component {
         try {
             //Do Nothing
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.ActiveHandler>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.ActiveHandler>>' + ex.message});
         }
     };
     BackHandler() {
         try {
             this.Hide();
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.BackHandler>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.BackHandler>>' + ex.message});
         }
     };
     KeyboardHandler(action, keyboardheight) {
         try {
             //Do Nothing
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.KeyboardHandler>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.KeyboardHandler>>' + ex.message});
         }
     };
     ShortcutHandler(Shortcut_Value) {
         try {
             //Do Nothing
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.KeyboardHandler>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.KeyboardHandler>>' + ex.message});
         }
     };
 
@@ -263,37 +178,9 @@ module.exports = class TransactionSearch extends Component {
                                 >
                                         <Image source={Global.Theme.Header.Icons.Back} style={{width: 20, height: 20}} />
                                 </Pressable>                                  
-                                <View style={{flex: 1, height: 50, justifyContent: 'center'}}>
-                                    <Text style={{fontSize: 20, fontWeight: 'bold', color: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212')}} numberOfLines={1}>TRANSACTIONS ({Global.State[this.props.ModelID].SearchCount})</Text>
+                                <View style={{flex: 1, height: 50, alignItems: 'center', justifyContent: 'center', marginRight: 50}}>
+                                    <Text style={{fontSize: 20, fontWeight: 'bold', color: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212')}} numberOfLines={1}>Podcasts</Text>
                                 </View>
-                                <Pressable 
-                                    onPress={() => {
-                                        this.ExportList();
-                                    }}
-                                    style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1}]}
-                                >
-                                    <Image source={global.ColorScheme === 'dark' ? IMG_Upload_eeeeee : IMG_Upload_121212} style={{width: 24, height: 24}} />
-                                </Pressable>
-                                <Pressable 
-                                    onPress={() => {
-                                        global.root.ProductSearch.Show();
-                                    }}
-                                    style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1}]}
-                                >
-                                    <Image source={global.ColorScheme === 'dark' ? IMG_Product_eeeeee : IMG_Product_121212} style={{width: 24, height: 24}} />
-                                </Pressable>                                
-                                <Pressable 
-                                    onPress={() => {
-                                        global.root.ShowTransaction({
-                                            TransactionID: null,
-                                            SaveCallback: (Transaction_Value) => this.Update(Transaction_Value),
-                                            DeleteCallback: (TransactionID_Value) => this.Delete(TransactionID_Value)
-                                        });
-                                    }}
-                                    style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1}]}
-                                >
-                                    <Image source={global.ColorScheme === 'dark' ? IMG_Add_eeeeee : IMG_Add_121212} style={{width: 28, height: 28}} />
-                                </Pressable>
                             </View>
     
                             {/* Search */}
@@ -331,7 +218,7 @@ module.exports = class TransactionSearch extends Component {
                                         await this.Search(null);
                                         this.setState({Refreshing: false});
                                     } catch (ex) {
-                                        global.Log({Message: 'TransactionSearch.IsActive>>' + ex.message, Notify: true});
+                                        global.Log({Message: 'PodcastSearch.IsActive>>' + ex.message, Notify: true});
                                         this.setState({Refreshing: false});
                                     }
                                 }} />
@@ -349,11 +236,11 @@ module.exports = class TransactionSearch extends Component {
                                             Global.State[this.props.ModelID].TransactionList = [...Global.State[this.props.ModelID].TransactionList, ...TransactionList_Value];
                                             this.forceUpdate();
                                         }).catch((ex) => {
-                                            global.Log({Message: 'TransactionSearch.render>>' + ex.message, Notify: true});
+                                            global.Log({Message: 'PodcastSearch.render>>' + ex.message, Notify: true});
                                         });
                                     }
                                 } catch (ex) {
-                                    global.Log({Message: 'TransactionSearch.render>>' + ex.message, Notify: true});
+                                    global.Log({Message: 'PodcastSearch.render>>' + ex.message, Notify: true});
                                 }
                             }}
                             renderItem={({item, index, separators}) => {
@@ -411,8 +298,8 @@ module.exports = class TransactionSearch extends Component {
                             keyExtractor={item => item.TransactionID} 
                             ListEmptyComponent={() => {
                                 return (
-                                    <View key={'No_Threads_Found'} style={{flex: 1, height: 50, margin: 10, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Text style={{color: Global.Theme.Body.ForegroundFade}}>No Transactions Found</Text>
+                                    <View key={'No_Podcasts_Found'} style={{flex: 1, height: 50, margin: 10, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={{color: Global.Theme.Body.ForegroundFade}}>No Podcasts Found</Text>
                                 </View>
                                 );
                             }}
@@ -426,7 +313,7 @@ module.exports = class TransactionSearch extends Component {
                 )
             }
         } catch (ex) {
-            global.Log({Message: 'TransactionSearch.render>>' + ex.message});
+            global.Log({Message: 'PodcastSearch.render>>' + ex.message});
         }
     };
 };

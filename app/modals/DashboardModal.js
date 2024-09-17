@@ -18,7 +18,6 @@ Styles = require('../helpers/Styles.js');
 AccountForm = require('../modals/AccountForm.js');
 AccountPersonForm = require('../modals/AccountPersonForm.js');
 AccountSubscriptionForm = require('../modals/AccountSubscriptionForm.js');
-AccountSearch = require('../modals/AccountSearch.js');
 AuthenticateForm = require('../modals/AuthenticateForm.js');
 CalendarModal = require('../modals/CalendarModal.js');
 CombinedLogSearch = require('../modals/CombinedLogSearch.js');
@@ -44,7 +43,7 @@ TicketLogForm = require('../modals/TicketLogForm.js');
 TicketSearch = require('../modals/TicketSearch.js');
 TokenForm = require('../modals/TokenForm.js');
 TransactionForm = require('../modals/TransactionForm.js');
-TransactionSearch = require('../modals/TransactionSearch.js');
+PodcastSearch = require('../modals/PodcastSearch.js');
 NotificationModal = require('../modals/NotificationModal.js');
 
 //Helpers
@@ -71,32 +70,11 @@ TransactionItemHelper = require('../helpers/TransactionItemHelper.js');
 
 //Images
 IMG_LOGO = require('./images/logo.png');
-IMG_Bank_eeeeee = require('./images/bank_eeeeee.png');
-IMG_Bank_121212 = require('./images/bank_121212.png');
-IMG_Logo_Dark = require('./images/logo_dark.png');
-IMG_Logo_Light = require('./images/logo_light.png');
-IMG_Back_000000 = require('./images/back_000000.png');
-IMG_Back_ffffff = require('./images/back_ffffff.png');
 IMG_Back_eeeeee = require('./images/back_eeeeee.png');
 IMG_Back_121212 = require('./images/back_121212.png');
-IMG_Menu_ffffff = require('./images/menu_ffffff.png');
-IMG_Menu_000000 = require('./images/menu_000000.png');
-IMG_Add_4169e1 = require('./images/add_4169e1.png');
-IMG_Add_ffffff = require('./images/add_ffffff.png');
-IMG_Add_000000 = require('./images/add_000000.png');
-IMG_Edit_4169e1 = require('./images/edit_4169e1.png');
-IMG_Edit_000000 = require('./images/edit_000000.png');
-IMG_Search_4169e1 = require('./images/search_4169e1.png');
-IMG_Search_a9a9a9 = require('./images/search_a9a9a9.png');
-IMG_Event_ffffff = require('./images/event_ffffff.png');
 IMG_Close_4169e1 = require('./images/close_4169e1.png');
 IMG_Close_ffffff = require('./images/close_ffffff.png');
-IMG_Close_bf381a = require('./images/close_bf381a.png');
-IMG_Chart_eeeeee = require('./images/chart_eeeeee.png');
-IMG_Chart_121212 = require('./images/chart_121212.png');
 IMG_Tick_4169e1 = require('./images/tick_4169e1.png');
-IMG_Tick_ffffff = require('./images/tick_ffffff.png');
-IMG_Next_4169e1 = require('./images/next_4169e1.png');
 IMG_Next_ffffff = require('./images/next_ffffff.png');
 IMG_Next_121212 = require('./images/next_121212.png');
 IMG_Next_eeeeee = require('./images/next_eeeeee.png');
@@ -108,15 +86,12 @@ IMG_Prev_Double_4169e1 = require('./images/prev_double_4169e1.png');
 IMG_Prev_Double_ffffff = require('./images/prev_double_ffffff.png');
 IMG_Print_4169e1 = require('./images/print_4169e1.png');
 IMG_Person_ffffff = require('./images/person_ffffff.png');
-IMG_Person_333333 = require('./images/user_333333.png');
-IMG_Account_333333 = require('./images/person_333333.png');
 IMG_Product_ffffff = require('./images/product_ffffff.png');
 IMG_Product_333333 = require('./images/product_333333.png');
 IMG_Ticket_333333 = require('./images/ticket_333333.png');
 IMG_Location_a9a9a9 = require('./images/location_a9a9a9.png');
 IMG_Trash_ffffff = require('./images/trash_ffffff.png');
 IMG_Trash_000000 = require('./images/trash_000000.png');
-IMG_Message_333333 = require('./images/message_333333.png');
 IMG_Settings_333333 = require('./images/settings_333333.png');
 IMG_Settings_eeeeee = require('./images/settings_eeeeee.png');
 IMG_Settings_121212 = require('./images/settings_121212.png');
@@ -135,7 +110,6 @@ IMG_Building_000000 = require('./images/building_000000.png');
 IMG_Product_eeeeee = require('./images/product_eeeeee.png');
 IMG_Product_121212 = require('./images/product_121212.png');
 IMG_Bolt_eeeeee = require('./images/bolt_eeeeee.png');
-IMG_Bolt_121212 = require('./images/bolt_121212.png');
 IMG_Comment_eeeeee = require('./images/comment_eeeeee.png');
 IMG_Comment_121212 = require('./images/comment_121212.png');
 IMG_Account_eeeeee = require('./images/account_eeeeee.png');
@@ -150,10 +124,6 @@ IMG_Email_eeeeee = require('./images/email_eeeeee.png');
 IMG_Email_121212 = require('./images/email_121212.png');
 IMG_Send_eeeeee = require('./images/send_eeeeee.png');
 IMG_Send_121212 = require('./images/send_121212.png');
-IMG_Visible_eeeeee = require('./images/visible_eeeeee.png');
-IMG_Visible_121212 = require('./images/visible_121212.png');
-IMG_Hidden_eeeeee = require('./images/hidden_eeeeee.png');
-IMG_Hidden_121212 = require('./images/hidden_121212.png');
 IMG_Copy_eeeeee = require('./images/copy_eeeeee.png');
 IMG_Copy_121212 = require('./images/copy_121212.png');
 IMG_Upload_eeeeee = require('./images/upload_eeeeee.png');
@@ -164,8 +134,6 @@ IMG_Done_eeeeee = require('./images/done_eeeeee.png');
 IMG_Done_121212 = require('./images/done_121212.png');
 IMG_Archive_eeeeee = require('./images/archive_eeeeee.png');
 IMG_Archive_121212 = require('./images/archive_121212.png');
-IMG_Question_eeeeee = require('./images/question_eeeeee.png');
-IMG_Question_121212 = require('./images/question_121212.png');
 IMG_Book_eeeeee = require('./images/book_eeeeee.png');
 IMG_Book_121212 = require('./images/book_121212.png');
 
@@ -188,7 +156,6 @@ module.exports = class DashboardModal extends Component {
         });
 
         this.AccountForm = null;
-        this.AccountSearch = null;
         this.AuthenticateForm = null;
         this.CalendarModal = null;
         this.ConfirmModal = null;
@@ -204,7 +171,7 @@ module.exports = class DashboardModal extends Component {
         this.ThreadSearch = null;
         this.TicketSearch = null;
         this.TransactionForm = null;
-        this.TransactionSearch = null;
+        this.PodcastSearch = null;
         this.PersonForm = null;
         this.KeyboardOpen = false;
 
@@ -439,7 +406,6 @@ module.exports = class DashboardModal extends Component {
                     this.TicketSearch.Hide();
                     this.TaskSearch.Hide();
                     this.ThreadSearch.Hide();
-                    this.AccountSearch.Hide();
                     this.AuthenticateForm.Show();
                     if (Global.WebSocket !== null) {
                         Global.WebSocket.close(1000);
@@ -536,11 +502,10 @@ module.exports = class DashboardModal extends Component {
 
     NavBack() {
         try {
-            if (this.AccountSearch !== null
-            || this.TaskSearch !== null
+            if (this.TaskSearch !== null
             || this.ThreadSearch !== null
             || this.TicketSearch !== null
-            || this.TransactionSearch !== null) {
+            || this.PodcastSearch !== null) {
                 this.ChangeView('ActivitySearch');
             } else {
                 this.AuthContext(null);
@@ -554,47 +519,33 @@ module.exports = class DashboardModal extends Component {
 
             //Show / Hide
             if (View_Value === 'AuthenticateForm') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                }
                 await this.AuthenticateForm.Show();
                 this.ActivitySearch.Hide();
-                this.TransactionSearch.Hide()
+                this.PodcastSearch.Hide()
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
-            } else if (View_Value === 'ActivitySearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                }              
+            } else if (View_Value === 'ActivitySearch') {           
                 await this.ActivitySearch.Show();
                 this.AuthenticateForm.Hide();
-                this.TransactionSearch.Hide();
+                this.PodcastSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
-            } else if (View_Value === 'TransactionSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                } 
-                await this.TransactionSearch.Show();
+            } else if (View_Value === 'PodcastSearch') {
+                await this.PodcastSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
             } else if (View_Value === 'TicketSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                } 
                 await this.TicketSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TaskSearch.Hide();
-                this.TransactionSearch.Hide();
+                this.PodcastSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
             } else if (View_Value === 'TaskSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
@@ -603,9 +554,8 @@ module.exports = class DashboardModal extends Component {
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
-                this.TransactionSearch.Hide();
+                this.PodcastSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
             } else if (View_Value === 'ThreadSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
@@ -613,21 +563,9 @@ module.exports = class DashboardModal extends Component {
                 await this.ThreadSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
-                this.TransactionSearch.Hide();
+                this.PodcastSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
-                this.AccountSearch.Hide();
-            } else if (View_Value === 'AccountSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                } 
-                await this.AccountSearch.Show();
-                this.AuthenticateForm.Hide();
-                this.ActivitySearch.Hide();
-                this.TransactionSearch.Hide();
-                this.TicketSearch.Hide();
-                this.TaskSearch.Hide();
-                this.ThreadSearch.Hide();
             }
 
             this.forceUpdate();
@@ -848,7 +786,6 @@ module.exports = class DashboardModal extends Component {
             let _TicketsButton = null;
             let _CalendarButton = null;
             let _ThreadsButton = null;
-            let _AccountsButton = null;
             if (Global.TokenPayload !== null 
             && Global.TokenPayload.hasOwnProperty('TokenPersonID')
             && Global.StringHasContent(Global.TokenPayload.TokenPersonID)) {
@@ -863,8 +800,8 @@ module.exports = class DashboardModal extends Component {
                 );
                 _TransactionsButton = (
                     <Pressable onPress={() => {
-                        this.ChangeView('TransactionSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TransactionSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                        this.ChangeView('PodcastSearch');
+                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.PodcastSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Podcast} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
@@ -879,7 +816,7 @@ module.exports = class DashboardModal extends Component {
                     <Pressable onPress={() => {
                         this.ChangeView('TaskSearch');
                     }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TaskSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={Global.Theme.Footer.Icons.Task} style={{width: 24, height: 24}} />
+                        <Image source={Global.Theme.Footer.Icons.Calendar} style={{width: 24, height: 24}} />
                     </Pressable>
                 );                
                 _ThreadsButton = (
@@ -890,13 +827,6 @@ module.exports = class DashboardModal extends Component {
                             <Image source={global.ColorScheme === 'dark' ? IMG_Comment_eeeeee : IMG_Comment_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                             <View style={{position: 'absolute', width: 10, height: 10, top: 10, right: 0, borderRadius: 5, backgroundColor: 'red', opacity: Global.State[this.props.ModelID].UnreadMessages > 0 ? 1 : 0}}></View>
                         </View>
-                    </Pressable>
-                );
-                _AccountsButton = (
-                    <Pressable onPress={() => {
-                        this.ChangeView('AccountSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.AccountSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={global.ColorScheme === 'dark' ? IMG_Account_eeeeee : IMG_Account_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
 
@@ -915,8 +845,6 @@ module.exports = class DashboardModal extends Component {
                             {_CalendarButton}
                             <View style={{flex: 1}}></View>                            
                             {_ThreadsButton}
-                            <View style={{flex: 1}}></View>
-                            {_AccountsButton}
                             <View style={{flex: 1}}></View>
                         </View>
                     );
@@ -938,9 +866,6 @@ module.exports = class DashboardModal extends Component {
                             <View style={{flex: 1, alignItems: 'center'}}>
                                 {_ThreadsButton}
                             </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                {_AccountsButton}
-                            </View>
                         </View>
                     );
                     _SafeAreaBackground = (
@@ -957,13 +882,12 @@ module.exports = class DashboardModal extends Component {
                     {/* UI Body */}
                     <View style={{flex: 1, marginTop: Global.InsetTop, marginBottom: Global.InsetBottom}}>
                         <View style={{flex: 1, flexDirection: 'row'}}>                            
-                            <AccountSearch ref={ele => this.AccountSearch = ele} ModelID={this.props.ModelID + '_8UG4AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <AuthenticateForm ref={ele => this.AuthenticateForm = ele} ModelID={this.props.ModelID + '_AFS84US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <ActivitySearch ref={ele => this.ActivitySearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <ThreadSearch ref={ele => this.ThreadSearch = ele} ModelID={this.props.ModelID + '_NZ52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TicketSearch ref={ele => this.TicketSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <TransactionSearch ref={ele => this.TransactionSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />                            
+                            <PodcastSearch ref={ele => this.PodcastSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />                            
                         </View>
                         {_DesktopMenuUI}
                         {_MobileMenuUI}
