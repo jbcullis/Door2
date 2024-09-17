@@ -29,14 +29,13 @@ KnowledgeSearch = require('../modals/KnowledgeSearch.js');
 PersonDeviceForm = require('../modals/PersonDeviceForm.js');
 PersonForm = require('../modals/PersonForm.js');
 PersonPicker = require('../modals/PersonPicker.js');
-PersonSearch = require('../modals/PersonSearch.js');
 PickerModal = require('../modals/PickerModal.js');
 ProductForm = require('../modals/ProductForm.js');
 ProductSearch = require('../modals/ProductSearch.js');
 ReleaseForm = require('../modals/ReleaseForm.js');
 SchemaForm = require('../modals/SchemaForm.js');
 ServiceForm = require('../modals/ServiceForm.js');
-StatisticSearch = require('../modals/StatisticSearch.js');
+ActivitySearch = require('../modals/ActivitySearch.js');
 TaskSearch = require('../modals/TaskSearch.js');
 ThreadForm = require('../modals/ThreadForm.js');
 ThreadSearch = require('../modals/ThreadSearch.js');
@@ -122,7 +121,6 @@ IMG_Settings_333333 = require('./images/settings_333333.png');
 IMG_Settings_eeeeee = require('./images/settings_eeeeee.png');
 IMG_Settings_121212 = require('./images/settings_121212.png');
 IMG_Chart_333333 = require('./images/chart_333333.png');
-IMG_Activity_333333 = require('./images/activity_333333.png');
 IMG_Warning_333333 = require('./images/warning_333333.png');
 IMG_Warning_121212 = require('./images/warning_121212.png');
 IMG_Tree_Bottom_000000 = require('./images/tree_bottom_000000.png');
@@ -200,7 +198,7 @@ module.exports = class DashboardModal extends Component {
         this.PickerModal = null;
         this.ProductSearch = null;
         this.ReleaseForm = null;
-        this.StatisticSearch = null;
+        this.ActivitySearch = null;
         this.TaskSearch = null;
         this.ThreadForm = null;
         this.ThreadSearch = null;
@@ -208,7 +206,6 @@ module.exports = class DashboardModal extends Component {
         this.TransactionForm = null;
         this.TransactionSearch = null;
         this.PersonForm = null;
-        this.PersonSearch = null;
         this.KeyboardOpen = false;
 
         Global.State[this.props.ModelID] = {
@@ -363,13 +360,13 @@ module.exports = class DashboardModal extends Component {
                                         DeleteCallback: null,
                                     });
                                 } else {
-                                    this.ChangeView('StatisticSearch');
+                                    this.ChangeView('ActivitySearch');
                                 }
                             } else {
-                                this.ChangeView('StatisticSearch');
+                                this.ChangeView('ActivitySearch');
                             }
                         } else {
-                            this.ChangeView('StatisticSearch');
+                            this.ChangeView('ActivitySearch');
                         }
                         this.CreateSocket();
                     } else {
@@ -415,7 +412,7 @@ module.exports = class DashboardModal extends Component {
             && Global.TokenPayload.hasOwnProperty('TokenPersonID') 
             && Global.TokenPayload.TokenPersonID !== null
             && Global.TokenPayload.TokenPersonID.length > 0) {
-                this.ChangeView('StatisticSearch');
+                this.ChangeView('ActivitySearch');
                 this.CreateSocket();
             } else {
                 if (Global.WebSocket != null) {
@@ -438,12 +435,11 @@ module.exports = class DashboardModal extends Component {
                     Global.State[this.props.ModelID].UnreadMessages = null;
                     Global.State[this.props.ModelID].DeepLink = null;
 
-                    this.StatisticSearch.Hide();
+                    this.ActivitySearch.Hide();
                     this.TicketSearch.Hide();
                     this.TaskSearch.Hide();
                     this.ThreadSearch.Hide();
                     this.AccountSearch.Hide();
-                    this.PersonSearch.Hide();
                     this.AuthenticateForm.Show();
                     if (Global.WebSocket !== null) {
                         Global.WebSocket.close(1000);
@@ -544,9 +540,8 @@ module.exports = class DashboardModal extends Component {
             || this.TaskSearch !== null
             || this.ThreadSearch !== null
             || this.TicketSearch !== null
-            || this.TransactionSearch !== null
-            || this.PersonSearch !== null) {
-                this.ChangeView('StatisticSearch');
+            || this.TransactionSearch !== null) {
+                this.ChangeView('ActivitySearch');
             } else {
                 this.AuthContext(null);
             }
@@ -563,95 +558,76 @@ module.exports = class DashboardModal extends Component {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
                 }
                 await this.AuthenticateForm.Show();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TransactionSearch.Hide()
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
-            } else if (View_Value === 'StatisticSearch') {
+            } else if (View_Value === 'ActivitySearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                 }              
-                await this.StatisticSearch.Show();
+                await this.ActivitySearch.Show();
                 this.AuthenticateForm.Hide();
                 this.TransactionSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
             } else if (View_Value === 'TransactionSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                 } 
                 await this.TransactionSearch.Show();
                 this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
             } else if (View_Value === 'TicketSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
                 } 
                 await this.TicketSearch.Show();
                 this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TaskSearch.Hide();
                 this.TransactionSearch.Hide();
                 this.ThreadSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
             } else if (View_Value === 'TaskSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
                 } 
                 await this.TaskSearch.Show();
                 this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
                 this.TransactionSearch.Hide();
                 this.ThreadSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
             } else if (View_Value === 'ThreadSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
                 } 
                 await this.ThreadSearch.Show();
                 this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TransactionSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.AccountSearch.Hide();
-                this.PersonSearch.Hide();
             } else if (View_Value === 'AccountSearch') {
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     TurboModuleRegistry.get('AwakeModule').setAwake(false);
                 } 
                 await this.AccountSearch.Show();
                 this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
+                this.ActivitySearch.Hide();
                 this.TransactionSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
                 this.ThreadSearch.Hide();
-                this.PersonSearch.Hide();
-            } else if (View_Value === 'PersonSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                } 
-                await this.PersonSearch.Show();
-                this.AuthenticateForm.Hide();
-                this.StatisticSearch.Hide();
-                this.TransactionSearch.Hide();
-                this.TicketSearch.Hide();
-                this.TaskSearch.Hide();
-                this.ThreadSearch.Hide();
-                this.AccountSearch.Hide();
             }
 
             this.forceUpdate();
@@ -867,37 +843,36 @@ module.exports = class DashboardModal extends Component {
             let _MobileMenuUI = null;
             let _SafeAreaBackground = null;
             let _Display = Global.ScreenX >= 600 ? 'Desktop' : 'Mobile';            
-            let _StatisticsButton = null;
+            let _ActivityButton = null;
             let _TransactionsButton = null;
             let _TicketsButton = null;
             let _CalendarButton = null;
             let _ThreadsButton = null;
             let _AccountsButton = null;
-            let _PeopleButton = null;
             if (Global.TokenPayload !== null 
             && Global.TokenPayload.hasOwnProperty('TokenPersonID')
             && Global.StringHasContent(Global.TokenPayload.TokenPersonID)) {
 
                 //Create menu buttons
-                _StatisticsButton = (
+                _ActivityButton = (
                     <Pressable onPress={() => {
-                        this.ChangeView('StatisticSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.StatisticSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={global.ColorScheme === 'dark' ? IMG_Chart_eeeeee : IMG_Chart_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        this.ChangeView('ActivitySearch');
+                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.ActivitySearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                        <Image source={Global.Theme.Footer.Icons.Activity} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
                 _TransactionsButton = (
                     <Pressable onPress={() => {
                         this.ChangeView('TransactionSearch');
                     }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TransactionSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={global.ColorScheme === 'dark' ? IMG_Bank_eeeeee : IMG_Bank_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        <Image source={Global.Theme.Footer.Icons.Podcast} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
                 _TicketsButton = (
                     <Pressable onPress={() => {
                         this.ChangeView('TicketSearch');
                     }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TicketSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={global.ColorScheme === 'dark' ? IMG_Bolt_eeeeee : IMG_Bolt_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        <Image source={Global.Theme.Footer.Icons.Video} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
                 _CalendarButton = (
@@ -924,13 +899,6 @@ module.exports = class DashboardModal extends Component {
                         <Image source={global.ColorScheme === 'dark' ? IMG_Account_eeeeee : IMG_Account_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
-                _PeopleButton = (
-                    <Pressable onPress={() => {
-                        this.ChangeView('PersonSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.PersonSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <Image source={global.ColorScheme === 'dark' ? IMG_Person_eeeeee : IMG_Person_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
-                    </Pressable>
-                );
 
                 //Layout depending on screen size
                 if (Global.ScreenX >= 600) {
@@ -938,7 +906,7 @@ module.exports = class DashboardModal extends Component {
                         <View style={{position: 'absolute', alignSelf: 'center', width: 600, borderRadius: 5, flexDirection: 'row', bottom: 10}}>
                             <View style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, backgroundColor: Global.Theme.Footer.BackgroundColor, opacity: .8}}></View>
                             <View style={{flex: 1}}></View>
-                            {_StatisticsButton}
+                            {_ActivityButton}
                             <View style={{flex: 1}}></View>
                             {_TransactionsButton}
                             <View style={{flex: 1}}></View>
@@ -950,15 +918,13 @@ module.exports = class DashboardModal extends Component {
                             <View style={{flex: 1}}></View>
                             {_AccountsButton}
                             <View style={{flex: 1}}></View>
-                            {_PeopleButton}
-                            <View style={{flex: 1}}></View>
                         </View>
                     );
                 } else {
                     _MobileMenuUI = (
                         <View style={{flexDirection: 'row', backgroundColor: Global.Theme.Footer.BackgroundColor, paddingLeft: 10, paddingRight: 10}}>
                             <View style={{flex: 1, alignItems: 'center'}}>
-                                {_StatisticsButton}
+                                {_ActivityButton}
                             </View>
                             <View style={{flex: 1, alignItems: 'center'}}>
                                 {_TransactionsButton}
@@ -974,9 +940,6 @@ module.exports = class DashboardModal extends Component {
                             </View>
                             <View style={{flex: 1, alignItems: 'center'}}>
                                 {_AccountsButton}
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                {_PeopleButton}
                             </View>
                         </View>
                     );
@@ -997,8 +960,7 @@ module.exports = class DashboardModal extends Component {
                             <AccountSearch ref={ele => this.AccountSearch = ele} ModelID={this.props.ModelID + '_8UG4AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <AuthenticateForm ref={ele => this.AuthenticateForm = ele} ModelID={this.props.ModelID + '_AFS84US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <PersonSearch ref={ele => this.PersonSearch = ele} ModelID={this.props.ModelID + '_NP52AJ8Z'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <StatisticSearch ref={ele => this.StatisticSearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
+                            <ActivitySearch ref={ele => this.ActivitySearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <ThreadSearch ref={ele => this.ThreadSearch = ele} ModelID={this.props.ModelID + '_NZ52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TicketSearch ref={ele => this.TicketSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TransactionSearch ref={ele => this.TransactionSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />                            

@@ -105,7 +105,7 @@ module.exports = class AuthenticateForm extends Component {
                 this.forceUpdate();
 
                 //Show service list
-                global.root.ChangeView('StatisticSearch');
+                global.root.ChangeView('ActivitySearch');
                 
             }
         } catch (ex) {

@@ -55,7 +55,10 @@ module.exports = {
             ControlBackground: (global.ColorScheme === 'dark' ? '#28292f' : '#e6e6e6'),
             ForegroundColor: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212'),
             Icons: {
+                Activity: global.ColorScheme === 'dark' ? require('../modals/images/activity_eeeeee.png') : require('../modals/images/activity_121212.png'),
+                Podcast: global.ColorScheme === 'dark' ? require('../modals/images/podcast_eeeeee.png') : require('../modals/images/podcast_121212.png'),
                 Task: global.ColorScheme === 'dark' ? require('../modals/images/task_eeeeee.png') : require('../modals/images/task_121212.png'),
+                Video: global.ColorScheme === 'dark' ? require('../modals/images/video_eeeeee.png') : require('../modals/images/video_121212.png'),
             }
         },
         Highlight: {

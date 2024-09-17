@@ -8,7 +8,7 @@ import {
     Pressable,
     Platform,
 } from 'react-native';
-module.exports = class StatisticSearch extends Component {
+module.exports = class ActivitySearch extends Component {
     constructor(props) {
         super(props);
         this.Titlebar = null;
@@ -17,7 +17,7 @@ module.exports = class StatisticSearch extends Component {
         try {
             return Global.State.hasOwnProperty(this.props.ModelID) && Global.State[this.props.ModelID] !== null;
         } catch (ex) {
-            global.Log({Message: 'StatisticSearch.IsActive>>' + ex.message});
+            global.Log({Message: 'ActivitySearch.IsActive>>' + ex.message});
         }
     };
     async Show() {
@@ -28,7 +28,7 @@ module.exports = class StatisticSearch extends Component {
             this.forceUpdate();
             global.root.ActiveHandler();
         } catch (ex) {
-            global.Log({Message: 'StatisticSearch.Show>>' + ex.message, Notify: true});
+            global.Log({Message: 'ActivitySearch.Show>>' + ex.message, Notify: true});
         }
     };
     Hide() {
@@ -37,7 +37,7 @@ module.exports = class StatisticSearch extends Component {
                 Global.State[this.props.ModelID] = null;
             }
         } catch (ex) {
-            global.Log({Message: 'StatisticSearch.Show>>' + ex.message});
+            global.Log({Message: 'ActivitySearch.Show>>' + ex.message});
         }
     };
     ClearFocus() {
@@ -49,7 +49,7 @@ module.exports = class StatisticSearch extends Component {
                 Keyboard.dismiss();
             }
         } catch (ex) {
-            global.Log({Message: 'StatisticSearch.ClearFocus>>' + ex.message});
+            global.Log({Message: 'ActivitySearch.ClearFocus>>' + ex.message});
         }
     };
 
@@ -106,7 +106,7 @@ module.exports = class StatisticSearch extends Component {
                 return <View></View>
             }
         } catch (ex) {
-            global.Log({Message: 'StatisticSearch.render>>' + ex.message});
+            global.Log({Message: 'ActivitySearch.render>>' + ex.message});
         }
     };
 };
