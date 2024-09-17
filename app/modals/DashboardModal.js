@@ -173,8 +173,6 @@ module.exports = class DashboardModal extends Component {
 
         Global.State[this.props.ModelID] = {
             IsLoaded: false,
-            UnreadMessages: null,
-            DeepLink: null,
             ActiveWindow: true,
         };
 
@@ -287,28 +285,8 @@ module.exports = class DashboardModal extends Component {
                     && Global.TokenPayload.TokenID !== null 
                     && Global.TokenPayload.hasOwnProperty('TokenPersonID') 
                     && Global.TokenPayload.TokenPersonID !== null) {
-                        if (Platform.OS === 'ios') { 
-                            let _DeepLink = await TurboModuleRegistry.get('NotificationModule').DeepLink();
-                            if (_DeepLink !== null) {
-                                let _Parts = _DeepLink.split(':'); // Get deep link parts
-                                if (_Parts.length === 2 && _Parts[0] === 'thread') {
-                                    this.ShowThread({
-                                        Thread: await ThreadHelper.GetOne({ThreadID: _Parts[1]}),
-                                        ReadCallback: null,
-                                        DeleteCallback: null,
-                                    });
-                                } else {
-                                    this.ChangeView('ActivitySearch');
-                                }
-                            } else {
-                                this.ChangeView('ActivitySearch');
-                            }
-                        } else {
-                            this.ChangeView('ActivitySearch');
-                        }
+                        this.ChangeView('ActivitySearch');
                     } else {
-                        Global.State[this.props.ModelID].UnreadMessages = null;
-                        Global.State[this.props.ModelID].DeepLink = null;                        
                         await TokenHelper.Delete(null);
                         this.ChangeView('AuthenticateForm');
                     }
@@ -363,10 +341,6 @@ module.exports = class DashboardModal extends Component {
             async () => {
                 try {
                     await global.root.NotificationModal.Show({ NotificationTitle: 'Signing Out...', NotificationStyle: 'Wait' });
-
-                    Global.State[this.props.ModelID].UnreadMessages = null;
-                    Global.State[this.props.ModelID].DeepLink = null;
-
                     this.ActivitySearch.Hide();
                     this.PodcastSearch.Hide();
                     this.TicketSearch.Hide();
