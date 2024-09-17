@@ -36,8 +36,6 @@ SchemaForm = require('../modals/SchemaForm.js');
 ServiceForm = require('../modals/ServiceForm.js');
 ActivitySearch = require('../modals/ActivitySearch.js');
 TaskSearch = require('../modals/TaskSearch.js');
-ThreadForm = require('../modals/ThreadForm.js');
-ThreadSearch = require('../modals/ThreadSearch.js');
 TicketForm = require('../modals/TicketForm.js');
 TicketLogForm = require('../modals/TicketLogForm.js');
 TicketSearch = require('../modals/TicketSearch.js');
@@ -167,8 +165,6 @@ module.exports = class DashboardModal extends Component {
         this.ReleaseForm = null;
         this.ActivitySearch = null;
         this.TaskSearch = null;
-        this.ThreadForm = null;
-        this.ThreadSearch = null;
         this.TicketSearch = null;
         this.TransactionForm = null;
         this.PodcastSearch = null;
@@ -189,29 +185,7 @@ module.exports = class DashboardModal extends Component {
 
             //Track app state - close sockets if background or inactive
             this.AppStateSubscription = AppState.addEventListener('change', async (nextAppState) => {
-                if (Global !== null && Global.WebSocket !== null) {
-                    if (nextAppState === 'active') {
-                        let _DeepLink = await TurboModuleRegistry.get('NotificationModule').DeepLink();
-                        if (_DeepLink !== null) {
-                            let _Parts = _DeepLink.split(':'); // Get deep link parts
-                            _DeepLink = null; // Null out deep link
-                            if (_Parts.length === 2 && _Parts[0] === 'thread') {
-                                this.ShowThread({
-                                    Thread: await ThreadHelper.GetOne({ThreadID: _Parts[1]}),
-                                    ReadCallback: null,
-                                    DeleteCallback: null,
-                                });
-                            }
-                        }
-                        if (Global.WebSocket !== null && (Global.WebSocket.readyState === 2 || Global.WebSocket.readyState === 3)) {
-                            this.CreateSocket();
-                        }
-                    } else {
-                        if (Global.WebSocket !== null && (Global.WebSocket.readyState === 0 || Global.WebSocket.readyState === 1)) {
-                            Global.WebSocket.close(1000);
-                        }
-                    }
-                }
+                
             });
 
             //Calculate safe area insets
@@ -291,10 +265,7 @@ module.exports = class DashboardModal extends Component {
                 //Logout
                 if (Params_Value.Message !== null && Params_Value.Message.endsWith('>>Unauthorized')) {
                     Global.SetToken(null);
-                    global.root.ChangeView('AuthenticateForm');
-                    if (Global.WebSocket !== null && (Global.WebSocket.readyState === 0 || Global.WebSocket.readyState === 1)) {
-                        Global.WebSocket.close(1000);
-                    }                    
+                    global.root.ChangeView('AuthenticateForm');                  
                 }
 
             } catch (ex) {
@@ -335,7 +306,6 @@ module.exports = class DashboardModal extends Component {
                         } else {
                             this.ChangeView('ActivitySearch');
                         }
-                        this.CreateSocket();
                     } else {
                         Global.State[this.props.ModelID].UnreadMessages = null;
                         Global.State[this.props.ModelID].DeepLink = null;                        
@@ -362,7 +332,6 @@ module.exports = class DashboardModal extends Component {
     componentWillUnmount() {
         try {
             this.AppStateSubscription?.remove();
-            Global?.WebSocket?.close();
         } catch (ex) {
             //Do Nothing
         }
@@ -380,12 +349,8 @@ module.exports = class DashboardModal extends Component {
             && Global.TokenPayload.TokenPersonID !== null
             && Global.TokenPayload.TokenPersonID.length > 0) {
                 this.ChangeView('ActivitySearch');
-                this.CreateSocket();
             } else {
-                if (Global.WebSocket != null) {
-                    Global.WebSocket.close(1000);
-                }
-                this.ChangeView('ServiceSearch');
+                this.ChangeView('ActivitySearch');
             }
             this.forceUpdate();
         } catch (ex) {
@@ -403,13 +368,10 @@ module.exports = class DashboardModal extends Component {
                     Global.State[this.props.ModelID].DeepLink = null;
 
                     this.ActivitySearch.Hide();
+                    this.PodcastSearch.Hide();
                     this.TicketSearch.Hide();
                     this.TaskSearch.Hide();
-                    this.ThreadSearch.Hide();
                     this.AuthenticateForm.Show();
-                    if (Global.WebSocket !== null) {
-                        Global.WebSocket.close(1000);
-                    }
                     await TokenHelper.Delete(null);
                     this.NotificationModal.Hide();
                     this.forceUpdate();
@@ -426,84 +388,9 @@ module.exports = class DashboardModal extends Component {
         }
     };
 
-    //WebSockets
-    async CreateSocket() {
-        try {
-            
-            if (Global.WebSocket !== null) {
-                Global.WebSocket.onopen = null;
-                Global.WebSocket.onmessage = null;
-                Global.WebSocket.onclose = null;
-                Global.WebSocket = null;
-            }
-
-            //Only connect to sockets on production
-            if (Global.CORE_URL === 'https://core.sitemesh.com/') {
-                Global.WebSocket = new WebSocket('wss://core.sitemesh.com/v1/support/chat?token=' + Global.Token, null, {
-                    headers: {
-                        'authorization': 'bearer ' + Global.Token
-                    }
-                });
-                Global.WebSocket.onopen = async () => {
-                    //Global.State[this.props.ModelID].UnreadMessages = await MessageHelper.GetCount({MessagePersonID: Global.TokenPayload.TokenPersonID, MessageStatus: 'sent'});
-                    this.forceUpdate();
-                };
-    
-                Global.WebSocket.onerror = (e) => {
-                    console.warn(e);
-                };
-    
-                //Include on message event handler
-                Global.WebSocket.onmessage = (e) => {
-                    try {
-                        let _ThreadMessage = JSON.parse(e.data);
-    
-                        //Forward to thread search to update list
-                        if (this.ThreadSearch !== null && this.ThreadSearch.IsActive()) {
-                            this.ThreadSearch.ReceiveMessage(_ThreadMessage);
-                        }
-    
-                        //Forward to thread form to run real time chat
-                        if (this.ThreadForm !== null && this.ThreadForm.IsActive()) {
-                            this.ThreadForm.ReceiveMessage(_ThreadMessage);
-                        }                    
-    
-                        Global.State[this.props.ModelID].UnreadMessages += 1;
-                        this.forceUpdate();
-    
-                    } catch (ex) {
-                        global.Log({Message: 'DashboardModal.CreateSocket.onmessage>>' + ex.message, Notify: true});
-                    }                
-                };
-    
-                //Include on close event handler
-                Global.WebSocket.onclose = (e) => {
-                    try {
-                        this.forceUpdate();
-                        setTimeout(() => {
-                            try {
-                                if (Global.Token != null && Global.State[this.props.ModelID] !== null) {
-                                    this.CreateSocket();
-                                }
-                            } catch (ex) {
-                                global.Log({Message: 'DashboardModal.CreateSocket.onclose>>' + ex.message, Notify: true});
-                            }
-                        }, 10000);
-                    } catch (ex) {
-                        global.Log({Message: 'DashboardModal.CreateSocket.onclose>>' + ex.message, Notify: true});
-                    }
-                };
-            }
-
-        } catch (ex) {
-            global.Log({Message: 'DashboardModal.CreateSocket>>' + ex.message, Notify: true});
-        }
-    };
-
     NavBack() {
         try {
             if (this.TaskSearch !== null
-            || this.ThreadSearch !== null
             || this.TicketSearch !== null
             || this.PodcastSearch !== null) {
                 this.ChangeView('ActivitySearch');
@@ -524,48 +411,30 @@ module.exports = class DashboardModal extends Component {
                 this.PodcastSearch.Hide()
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
-                this.ThreadSearch.Hide();
             } else if (View_Value === 'ActivitySearch') {           
                 await this.ActivitySearch.Show();
                 this.AuthenticateForm.Hide();
                 this.PodcastSearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
-                this.ThreadSearch.Hide();
             } else if (View_Value === 'PodcastSearch') {
                 await this.PodcastSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
                 this.TaskSearch.Hide();
-                this.ThreadSearch.Hide();
             } else if (View_Value === 'TicketSearch') {
                 await this.TicketSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TaskSearch.Hide();
                 this.PodcastSearch.Hide();
-                this.ThreadSearch.Hide();
             } else if (View_Value === 'TaskSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                } 
                 await this.TaskSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TicketSearch.Hide();
                 this.PodcastSearch.Hide();
-                this.ThreadSearch.Hide();
-            } else if (View_Value === 'ThreadSearch') {
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    TurboModuleRegistry.get('AwakeModule').setAwake(false);
-                } 
-                await this.ThreadSearch.Show();
-                this.AuthenticateForm.Hide();
-                this.ActivitySearch.Hide();
-                this.PodcastSearch.Hide();
-                this.TicketSearch.Hide();
-                this.TaskSearch.Hide();
             }
 
             this.forceUpdate();
@@ -616,13 +485,6 @@ module.exports = class DashboardModal extends Component {
             this.ServiceForm.Show(Params_Value);
         } catch (ex) {
             global.Log({Message: 'DashboardModal.ShowService>>' + ex.message, Notify: true});
-        }
-    };
-    ShowThread(Params_Value) {
-        try {
-            this.ThreadForm.Show(Params_Value);
-        } catch (ex) {
-            global.Log({Message: 'DashboardModal.ShowThread>>' + ex.message, Notify: true});
         }
     };
     ShowTicket(Params_Value) {
@@ -713,8 +575,6 @@ module.exports = class DashboardModal extends Component {
                 this.ReleaseForm.ActiveHandler();                
             } else if (this.ServiceForm?.IsActive()) {
                 this.ServiceForm.ActiveHandler();
-            } else if (this.ThreadForm?.IsActive()) {
-                this.ThreadForm.ActiveHandler();
             } else if (this.TicketForm?.IsActive()) {
                 this.TicketForm.ActiveHandler();
             } else if (this.TransactionForm?.IsActive()) {
@@ -735,8 +595,8 @@ module.exports = class DashboardModal extends Component {
     };
     KeyboardHandler(action, keyboardheight) {
         try {
-            if (this.ThreadForm !== null && this.ThreadForm.IsActive()) {
-                this.ThreadForm.KeyboardHandler(action, keyboardheight);
+            if (this.PodcastSearch !== null && this.PodcastSearch.IsActive()) {
+                this.PodcastSearch.KeyboardHandler(action, keyboardheight);
             } else {
                 //Do Nothing
             }
@@ -785,7 +645,6 @@ module.exports = class DashboardModal extends Component {
             let _TransactionsButton = null;
             let _TicketsButton = null;
             let _CalendarButton = null;
-            let _ThreadsButton = null;
             if (Global.TokenPayload !== null 
             && Global.TokenPayload.hasOwnProperty('TokenPersonID')
             && Global.StringHasContent(Global.TokenPayload.TokenPersonID)) {
@@ -818,16 +677,6 @@ module.exports = class DashboardModal extends Component {
                     }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TaskSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Calendar} style={{width: 24, height: 24}} />
                     </Pressable>
-                );                
-                _ThreadsButton = (
-                    <Pressable onPress={() => {
-                        this.ChangeView('ThreadSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.ThreadSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
-                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                            <Image source={global.ColorScheme === 'dark' ? IMG_Comment_eeeeee : IMG_Comment_121212} style={[Styles.form_button_image, {width: 24, height: 24}]} />
-                            <View style={{position: 'absolute', width: 10, height: 10, top: 10, right: 0, borderRadius: 5, backgroundColor: 'red', opacity: Global.State[this.props.ModelID].UnreadMessages > 0 ? 1 : 0}}></View>
-                        </View>
-                    </Pressable>
                 );
 
                 //Layout depending on screen size
@@ -843,8 +692,6 @@ module.exports = class DashboardModal extends Component {
                             {_TicketsButton}
                             <View style={{flex: 1}}></View>
                             {_CalendarButton}
-                            <View style={{flex: 1}}></View>                            
-                            {_ThreadsButton}
                             <View style={{flex: 1}}></View>
                         </View>
                     );
@@ -863,9 +710,6 @@ module.exports = class DashboardModal extends Component {
                             <View style={{flex: 1, alignItems: 'center'}}>
                                 {_CalendarButton}
                             </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                                {_ThreadsButton}
-                            </View>
                         </View>
                     );
                     _SafeAreaBackground = (
@@ -883,11 +727,10 @@ module.exports = class DashboardModal extends Component {
                     <View style={{flex: 1, marginTop: Global.InsetTop, marginBottom: Global.InsetBottom}}>
                         <View style={{flex: 1, flexDirection: 'row'}}>                            
                             <AuthenticateForm ref={ele => this.AuthenticateForm = ele} ModelID={this.props.ModelID + '_AFS84US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <ActivitySearch ref={ele => this.ActivitySearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <ThreadSearch ref={ele => this.ThreadSearch = ele} ModelID={this.props.ModelID + '_NZ52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
+                            <PodcastSearch ref={ele => this.PodcastSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TicketSearch ref={ele => this.TicketSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <PodcastSearch ref={ele => this.PodcastSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />                            
+                            <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                         </View>
                         {_DesktopMenuUI}
                         {_MobileMenuUI}
@@ -905,7 +748,6 @@ module.exports = class DashboardModal extends Component {
                     <ProductSearch ref={ele => this.ProductSearch = ele} ModelID={this.props.ModelID + '_4VXVVCT1'} />
                     <ReleaseForm ref={ele => this.ReleaseForm = ele} ModelID={this.props.ModelID + '_RF1VV5C1'} />
                     <ServiceForm ref={ele => this.ServiceForm = ele} ModelID={this.props.ModelID + '_U48MQ3CT'} />                  
-                    <ThreadForm ref={ele => this.ThreadForm = ele} ModelID={this.props.ModelID + '_TF0A35YN'} />
                     <TicketForm ref={ele => this.TicketForm = ele} ModelID={this.props.ModelID + '_0ZJQ95YN'} />
                     <TransactionForm ref={ele => this.TransactionForm = ele} ModelID={this.props.ModelID + '_NJ52AJUS'} />
 

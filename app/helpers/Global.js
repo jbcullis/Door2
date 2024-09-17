@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 module.exports = {    
     CORE_URL: 'https://core.sitemesh.com/',
     VERSION: '2024.1.0',
-    WebSocket: null,
     State: {},
     Token: null,
     TokenPayload: null,

@@ -144,25 +144,17 @@ module.exports = class PodcastSearch extends Component {
             global.Log({Message: 'PodcastSearch.KeyboardHandler>>' + ex.message});
         }
     };
-    ShortcutHandler(Shortcut_Value) {
-        try {
-            //Do Nothing
-        } catch (ex) {
-            global.Log({Message: 'PodcastSearch.KeyboardHandler>>' + ex.message});
-        }
-    };
 
     render() {
         try {
             if (this.IsActive()) {
-                let _LastDate = null;
                 return (
                     <View style={{flex: 1, backgroundColor: Global.Theme.Header.BackgroundColor}}>
                         
                         {/* Searchbox */}
                         <View style={[
                             {
-                                height: 131, 
+                                height: 70, 
                                 padding: 10,
                             }
                         ]}>
@@ -181,26 +173,6 @@ module.exports = class PodcastSearch extends Component {
                                 <View style={{flex: 1, height: 50, alignItems: 'center', justifyContent: 'center', marginRight: 50}}>
                                     <Text style={{fontSize: 20, fontWeight: 'bold', color: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212')}} numberOfLines={1}>Podcasts</Text>
                                 </View>
-                            </View>
-    
-                            {/* Search */}
-                            <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
-                                <ElementControl 
-                                    Name={'Search'}
-                                    Casing={'upper'}                               
-                                    Value={Global.State[this.props.ModelID].SearchText}
-                                    Changed={(Text_Value) => {
-                                        Global.State[this.props.ModelID].SearchText = Text_Value;
-                                        this.forceUpdate();
-                                        clearTimeout(Global.State[this.props.ModelID].SearchTimeout);
-                                        Global.State[this.props.ModelID].SearchTimeout = setTimeout(() => {
-                                            let _SearchID = Math.random();
-                                            Global.State[this.props.ModelID].SearchID = _SearchID;
-                                            this.Search(_SearchID);
-                                        }, 400);
-                                    }}
-                                    Editable={this.props.ActiveWindow} 
-                                />                               
                             </View>
     
                         </View>
@@ -254,16 +226,6 @@ module.exports = class PodcastSearch extends Component {
                                 }
 
                                 let _SeparatorUI = null;
-                                let _TransactionDate = new Date(_Transaction.TransactionDate);
-                                let _TransactionShortDate = Global.FormatShortDate(_TransactionDate.getFullYear(), parseInt(_TransactionDate.getMonth() + 1), _TransactionDate.getDate());
-                                if (_LastDate === null || (_LastDate !== null && _LastDate !== _TransactionShortDate)) {
-                                    _LastDate = _TransactionShortDate;
-                                    _SeparatorUI = (
-                                        <View key={'DateSeparator_' + index} style={{flex: 1, height: 50, justifyContent: 'center', marginTop: 1, paddingLeft: 11}}>
-                                            <Text style={{color: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212'), fontWeight: 'bold', fontSize: 20}}>{_TransactionShortDate}</Text>
-                                        </View>
-                                    );
-                                }
 
                                 let _TransactionUI = (
                                     <Pressable 
@@ -299,7 +261,7 @@ module.exports = class PodcastSearch extends Component {
                             ListEmptyComponent={() => {
                                 return (
                                     <View key={'No_Podcasts_Found'} style={{flex: 1, height: 50, margin: 10, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, alignItems: 'center', justifyContent: 'center'}}>
-                                    <Text style={{color: Global.Theme.Body.ForegroundFade}}>No Podcasts Found</Text>
+                                    <Text style={{color: Global.Theme.Body.ForegroundFade}}>No Recent Podcasts</Text>
                                 </View>
                                 );
                             }}
