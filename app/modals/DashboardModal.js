@@ -36,7 +36,7 @@ ActivitySearch = require('../modals/ActivitySearch.js');
 TaskSearch = require('../modals/TaskSearch.js');
 TicketForm = require('../modals/TicketForm.js');
 TicketLogForm = require('../modals/TicketLogForm.js');
-TicketSearch = require('../modals/TicketSearch.js');
+VideoSearch = require('../modals/VideoSearch.js');
 TokenForm = require('../modals/TokenForm.js');
 TransactionForm = require('../modals/TransactionForm.js');
 PodcastSearch = require('../modals/PodcastSearch.js');
@@ -162,7 +162,7 @@ module.exports = class DashboardModal extends Component {
         this.ReleaseForm = null;
         this.ActivitySearch = null;
         this.TaskSearch = null;
-        this.TicketSearch = null;
+        this.VideoSearch = null;
         this.TransactionForm = null;
         this.PodcastSearch = null;
         this.PersonForm = null;
@@ -340,7 +340,7 @@ module.exports = class DashboardModal extends Component {
                     await global.root.NotificationModal.Show({ NotificationTitle: 'Signing Out...', NotificationStyle: 'Wait' });
                     this.ActivitySearch.Hide();
                     this.PodcastSearch.Hide();
-                    this.TicketSearch.Hide();
+                    this.VideoSearch.Hide();
                     this.TaskSearch.Hide();
                     this.AuthenticateForm.Show();
                     await TokenHelper.Delete(null);
@@ -362,7 +362,7 @@ module.exports = class DashboardModal extends Component {
     NavBack() {
         try {
             if (this.TaskSearch !== null
-            || this.TicketSearch !== null
+            || this.VideoSearch !== null
             || this.PodcastSearch !== null) {
                 this.ChangeView('ActivitySearch');
             } else {
@@ -380,22 +380,22 @@ module.exports = class DashboardModal extends Component {
                 await this.AuthenticateForm.Show();
                 this.ActivitySearch.Hide();
                 this.PodcastSearch.Hide()
-                this.TicketSearch.Hide();
+                this.VideoSearch.Hide();
                 this.TaskSearch.Hide();
             } else if (View_Value === 'ActivitySearch') {           
                 await this.ActivitySearch.Show();
                 this.AuthenticateForm.Hide();
                 this.PodcastSearch.Hide();
-                this.TicketSearch.Hide();
+                this.VideoSearch.Hide();
                 this.TaskSearch.Hide();
             } else if (View_Value === 'PodcastSearch') {
                 await this.PodcastSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
-                this.TicketSearch.Hide();
+                this.VideoSearch.Hide();
                 this.TaskSearch.Hide();
-            } else if (View_Value === 'TicketSearch') {
-                await this.TicketSearch.Show();
+            } else if (View_Value === 'VideoSearch') {
+                await this.VideoSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.TaskSearch.Hide();
@@ -404,7 +404,7 @@ module.exports = class DashboardModal extends Component {
                 await this.TaskSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
-                this.TicketSearch.Hide();
+                this.VideoSearch.Hide();
                 this.PodcastSearch.Hide();
             }
 
@@ -453,7 +453,7 @@ module.exports = class DashboardModal extends Component {
     };
     ShowTicket(Params_Value) {
         try {
-            this.TicketForm.Show(Params_Value, null, (TicketID_Value) => this.TicketSearch.Delete(TicketID_Value));
+            this.TicketForm.Show(Params_Value, null, (TicketID_Value) => this.VideoSearch.Delete(TicketID_Value));
         } catch (ex) {
             global.Log({Message: 'DashboardModal.ShowTicket>>' + ex.message, Notify: true});
         }
@@ -625,8 +625,8 @@ module.exports = class DashboardModal extends Component {
                 );
                 _TicketsButton = (
                     <Pressable onPress={() => {
-                        this.ChangeView('TicketSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TicketSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                        this.ChangeView('VideoSearch');
+                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.VideoSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Video} style={[Styles.form_button_image, {width: 24, height: 24}]} />
                     </Pressable>
                 );
@@ -688,7 +688,7 @@ module.exports = class DashboardModal extends Component {
                             <AuthenticateForm ref={ele => this.AuthenticateForm = ele} ModelID={this.props.ModelID + '_AFS84US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <ActivitySearch ref={ele => this.ActivitySearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <PodcastSearch ref={ele => this.PodcastSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <TicketSearch ref={ele => this.TicketSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
+                            <VideoSearch ref={ele => this.VideoSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                         </View>
                         {_DesktopMenuUI}
