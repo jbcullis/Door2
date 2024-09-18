@@ -9,6 +9,7 @@ import {
     Keyboard,
     ActivityIndicator,
     AppState,
+    Text,
 } from 'react-native';
 
 Global = require('../helpers/Global.js');
@@ -33,7 +34,7 @@ ReleaseForm = require('../modals/ReleaseForm.js');
 SchemaForm = require('../modals/SchemaForm.js');
 ServiceForm = require('../modals/ServiceForm.js');
 ActivitySearch = require('../modals/ActivitySearch.js');
-TaskSearch = require('../modals/TaskSearch.js');
+EventSearch = require('../modals/EventSearch.js');
 TicketForm = require('../modals/TicketForm.js');
 TicketLogForm = require('../modals/TicketLogForm.js');
 VideoSearch = require('../modals/VideoSearch.js');
@@ -161,7 +162,7 @@ module.exports = class DashboardModal extends Component {
         this.ProductSearch = null;
         this.ReleaseForm = null;
         this.ActivitySearch = null;
-        this.TaskSearch = null;
+        this.EventSearch = null;
         this.VideoSearch = null;
         this.TransactionForm = null;
         this.PodcastSearch = null;
@@ -341,7 +342,7 @@ module.exports = class DashboardModal extends Component {
                     this.ActivitySearch.Hide();
                     this.PodcastSearch.Hide();
                     this.VideoSearch.Hide();
-                    this.TaskSearch.Hide();
+                    this.EventSearch.Hide();
                     this.AuthenticateForm.Show();
                     await TokenHelper.Delete(null);
                     this.NotificationModal.Hide();
@@ -361,7 +362,7 @@ module.exports = class DashboardModal extends Component {
 
     NavBack() {
         try {
-            if (this.TaskSearch !== null
+            if (this.EventSearch !== null
             || this.VideoSearch !== null
             || this.PodcastSearch !== null) {
                 this.ChangeView('ActivitySearch');
@@ -381,27 +382,27 @@ module.exports = class DashboardModal extends Component {
                 this.ActivitySearch.Hide();
                 this.PodcastSearch.Hide()
                 this.VideoSearch.Hide();
-                this.TaskSearch.Hide();
+                this.EventSearch.Hide();
             } else if (View_Value === 'ActivitySearch') {           
                 await this.ActivitySearch.Show();
                 this.AuthenticateForm.Hide();
                 this.PodcastSearch.Hide();
                 this.VideoSearch.Hide();
-                this.TaskSearch.Hide();
+                this.EventSearch.Hide();
             } else if (View_Value === 'PodcastSearch') {
                 await this.PodcastSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.VideoSearch.Hide();
-                this.TaskSearch.Hide();
+                this.EventSearch.Hide();
             } else if (View_Value === 'VideoSearch') {
                 await this.VideoSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
-                this.TaskSearch.Hide();
+                this.EventSearch.Hide();
                 this.PodcastSearch.Hide();
-            } else if (View_Value === 'TaskSearch') {
-                await this.TaskSearch.Show();
+            } else if (View_Value === 'EventSearch') {
+                await this.EventSearch.Show();
                 this.AuthenticateForm.Hide();
                 this.ActivitySearch.Hide();
                 this.VideoSearch.Hide();
@@ -471,7 +472,7 @@ module.exports = class DashboardModal extends Component {
             //Show singleton top level controls first (NotificationModal, ConfirmModal, PickerModal) because they sit at the root so propagating backhandler doesnt work
             if (this.AccountForm?.IsActive()) {
                 this.AccountForm.BackHandler();
-                return true;            
+                return true;
             } else if (this.ConfirmModal?.IsActive()) {
                 this.ConfirmModal.BackHandler();
                 return true;
@@ -612,29 +613,33 @@ module.exports = class DashboardModal extends Component {
                 _ActivityButton = (
                     <Pressable onPress={() => {
                         this.ChangeView('ActivitySearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.ActivitySearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                    }} style={({pressed}) => [{width: 70, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.ActivitySearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Activity} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        <Text style={{fontSize: 11, color: Global.Theme.Footer.ForegroundColor}}>News</Text>
                     </Pressable>
                 );
                 _TransactionsButton = (
                     <Pressable onPress={() => {
                         this.ChangeView('PodcastSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.PodcastSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                    }} style={({pressed}) => [{width: 70, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.PodcastSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Podcast} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        <Text style={{fontSize: 11, color: Global.Theme.Footer.ForegroundColor}}>Podcasts</Text>
                     </Pressable>
                 );
                 _TicketsButton = (
                     <Pressable onPress={() => {
                         this.ChangeView('VideoSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.VideoSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                    }} style={({pressed}) => [{width: 70, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.VideoSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Video} style={[Styles.form_button_image, {width: 24, height: 24}]} />
+                        <Text style={{fontSize: 11, color: Global.Theme.Footer.ForegroundColor}}>Videos</Text>
                     </Pressable>
                 );
                 _CalendarButton = (
                     <Pressable onPress={() => {
-                        this.ChangeView('TaskSearch');
-                    }} style={({pressed}) => [{width: 50, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.TaskSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
+                        this.ChangeView('EventSearch');
+                    }} style={({pressed}) => [{width: 70, height: 50, alignItems: 'center', justifyContent: 'center', opacity: pressed ? .5 : 1, backgroundColor: this.EventSearch?.IsActive() ? Global.Theme.Footer.ControlBackground : 'transparent', borderRadius: 5, margin: _Display === 'Desktop' ? 10 : 5}]}>
                         <Image source={Global.Theme.Footer.Icons.Calendar} style={{width: 24, height: 24}} />
+                        <Text style={{fontSize: 11, color: Global.Theme.Footer.ForegroundColor}}>Events</Text>
                     </Pressable>
                 );
 
@@ -689,7 +694,7 @@ module.exports = class DashboardModal extends Component {
                             <ActivitySearch ref={ele => this.ActivitySearch = ele} ModelID={this.props.ModelID + '_SD9ZP4US'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <PodcastSearch ref={ele => this.PodcastSearch = ele} ModelID={this.props.ModelID + '_UAIFJ1KD'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                             <VideoSearch ref={ele => this.VideoSearch = ele} ModelID={this.props.ModelID + '_NP52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
-                            <TaskSearch ref={ele => this.TaskSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
+                            <EventSearch ref={ele => this.EventSearch = ele} ModelID={this.props.ModelID + '_CS52AJUS'} ActiveWindow={Global.State[this.props.ModelID].ActiveWindow} />
                         </View>
                         {_DesktopMenuUI}
                         {_MobileMenuUI}
