@@ -65,8 +65,7 @@ module.exports = class PodcastSearch extends Component {
                 SearchOffset: Global.State[this.props.ModelID].SearchOffset
             };
 
-            //let _Url = 'https://smaps01.sitemesh.com/v1/podcast/list';
-            let _Url = 'http://127.0.0.1:5003/v1/podcast/list';
+            let _Url = 'https://smaps01.sitemesh.com/v1/podcast/list';
             let _Response = await fetch(_Url, { body: JSON.stringify(_Params), method: 'POST', headers: Global.GetHeaders() });
             if (_Response.ok) {
                 console.log(SearchID_Value)

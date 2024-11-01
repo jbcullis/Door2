@@ -32,11 +32,12 @@ module.exports = {
             ForegroundColor: (global.ColorScheme === 'dark' ? '#eeeeee' : '#121212'),
             ForegroundFade: (global.ColorScheme === 'dark' ? 'rgba(238,238,238,.5)' : 'rgba(18,18,18,.5)'),
             Icons: {
+                Activity: global.ColorScheme === 'dark' ? require('../modals/images/activity_eeeeee.png') : require('../modals/images/activity_121212.png'),
+                Add: global.ColorScheme === 'dark' ? require('../modals/images/add_eeeeee.png') : require('../modals/images/add_121212.png'),
+                Copy: global.ColorScheme === 'dark' ? require('../modals/images/copy_eeeeee.png') : require('../modals/images/copy_121212.png'),
                 Back: global.ColorScheme === 'dark' ? require('../modals/images/back_eeeeee.png') : require('../modals/images/back_121212.png'),
                 Forward: global.ColorScheme === 'dark' ? require('../modals/images/forward_eeeeee.png') : require('../modals/images/forward_121212.png'),
-                Activity: global.ColorScheme === 'dark' ? require('../modals/images/activity_eeeeee.png') : require('../modals/images/activity_121212.png'),
-                Copy: global.ColorScheme === 'dark' ? require('../modals/images/copy_eeeeee.png') : require('../modals/images/copy_121212.png'),
-                Add: global.ColorScheme === 'dark' ? require('../modals/images/add_eeeeee.png') : require('../modals/images/add_121212.png'),
+                Play: global.ColorScheme === 'dark' ? require('../modals/images/play_eeeeee.png') : require('../modals/images/play_121212.png'),
                 Trash: global.ColorScheme === 'dark' ? require('../modals/images/trash_eeeeee.png') : require('../modals/images/trash_121212.png'),
             }
         },

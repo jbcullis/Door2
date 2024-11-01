@@ -16,6 +16,7 @@
 		1A09A20B2C9A2C7900D45BEE /* NotificationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09A2032C9A2C7900D45BEE /* NotificationModule.m */; };
 		1A09A20C2C9A2C7900D45BEE /* AwakeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09A2072C9A2C7900D45BEE /* AwakeModule.m */; };
 		1A09A20D2C9A2C7900D45BEE /* SafeAreaModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09A2082C9A2C7900D45BEE /* SafeAreaModule.m */; };
+		1A35B01C2CD57EAB00D0B214 /* RNAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A35B01B2CD57EAB00D0B214 /* RNAudio.m */; };
 		7699B88040F8A987B510C191 /* libPods-Door2-Door2Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Door2-Door2Tests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		F2DD0EC16E411A34B6D6E3F3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0967E77E45BAE4B55092304D /* PrivacyInfo.xcprivacy */; };
@@ -52,6 +53,8 @@
 		1A09A2072C9A2C7900D45BEE /* AwakeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AwakeModule.m; path = Door2/AwakeModule.m; sourceTree = "<group>"; };
 		1A09A2082C9A2C7900D45BEE /* SafeAreaModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SafeAreaModule.m; path = Door2/SafeAreaModule.m; sourceTree = "<group>"; };
 		1A09A2092C9A2C7900D45BEE /* AwakeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AwakeModule.h; path = Door2/AwakeModule.h; sourceTree = "<group>"; };
+		1A35B01A2CD57EAB00D0B214 /* RNAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNAudio.h; sourceTree = "<group>"; };
+		1A35B01B2CD57EAB00D0B214 /* RNAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAudio.m; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Door2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Door2.debug.xcconfig"; path = "Target Support Files/Pods-Door2/Pods-Door2.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Door2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Door2.release.xcconfig"; path = "Target Support Files/Pods-Door2/Pods-Door2.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Door2-Door2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Door2-Door2Tests.debug.xcconfig"; path = "Target Support Files/Pods-Door2-Door2Tests/Pods-Door2-Door2Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -101,6 +104,8 @@
 		13B07FAE1A68108700A75B9A /* Door2 */ = {
 			isa = PBXGroup;
 			children = (
+				1A35B01A2CD57EAB00D0B214 /* RNAudio.h */,
+				1A35B01B2CD57EAB00D0B214 /* RNAudio.m */,
 				1A09A2092C9A2C7900D45BEE /* AwakeModule.h */,
 				1A09A2072C9A2C7900D45BEE /* AwakeModule.m */,
 				1A09A2042C9A2C7900D45BEE /* NotificationModule.h */,
@@ -418,6 +423,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A35B01C2CD57EAB00D0B214 /* RNAudio.m in Sources */,
 				1A09A20B2C9A2C7900D45BEE /* NotificationModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				1A09A20A2C9A2C7900D45BEE /* RNClipboard.m in Sources */,
@@ -443,6 +449,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Door2-Door2Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = K287BHKR27;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -459,7 +466,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.door2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Door2.app/Door2";
 			};
@@ -471,6 +478,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = K287BHKR27;
 				INFOPLIST_FILE = Door2Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -483,7 +491,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.door2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Door2.app/Door2";
 			};
@@ -496,6 +504,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K287BHKR27;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Door2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -508,7 +517,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.door2;
 				PRODUCT_NAME = Door2;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -528,6 +537,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K287BHKR27;
 				INFOPLIST_FILE = Door2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -539,7 +549,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.door2;
 				PRODUCT_NAME = Door2;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

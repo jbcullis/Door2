@@ -60,7 +60,6 @@ module.exports = class PodcastForm extends Component {
         }
     };
 
-
     //Handlers
     ActiveHandler() {
         try {
@@ -141,11 +140,20 @@ module.exports = class PodcastForm extends Component {
                                         <View style={{alignItems: 'center', justifyContent: 'center'}}>
 
 
+                    
 
-
-                                            <View>
-                                                <Pressable style={{width: 60, height: 60, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue', borderRadius: 30}}>
-                                                    <Text>Play</Text>
+                                            <View style={{height: 100, alignItems: 'center', justifyContent: 'center'}}>
+                                                <Pressable
+                                                    style={({pressed}) => [{width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30, opacity: pressed ? .5 : 1}]}
+                                                    onPress={() => {
+                                                        try {
+                                                            TurboModuleRegistry.get('RNAudio').Play('https://core.sitemesh.com/blink.mp3');
+                                                        } catch (ex) {
+                                                            global.Log({Message: 'PodcastForm.Play>>' + ex.message, Notify: true});
+                                                        }                                                        
+                                                    }}
+                                                >
+                                                    <Image source={Global.Theme.Body.Icons.Play} style={{width: 40, height: 40}} />
                                                 </Pressable>
                                             </View>
 

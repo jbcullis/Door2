@@ -1,8 +1,6 @@
-#import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
-#import <React/RCTComponent.h>
+#import <AVFoundation/AVFoundation.h>
 
-@interface RNPhoto : NSObject <RCTBridgeModule, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-@property (nonatomic, strong) RCTPromiseResolveBlock resolve;
-@property (nonatomic, strong) RCTPromiseRejectBlock reject;
+@interface RNAudio : NSObject <RCTBridgeModule>
+@property (nonatomic, strong) AVPlayer *player;
 @end
