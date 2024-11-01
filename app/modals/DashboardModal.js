@@ -47,7 +47,6 @@ AccountHelper = require('../helpers/AccountHelper.js');
 AccountPersonHelper = require('../helpers/AccountPersonHelper.js');
 AccountSubscriptionHelper = require('../helpers/AccountSubscriptionHelper.js');
 CombinedLogHelper = require('../helpers/CombinedLogHelper.js');
-EmailHelper = require('../helpers/EmailHelper.js');
 KnowledgeHelper = require('../helpers/KnowledgeHelper.js');
 PersonHelper = require('../helpers/PersonHelper.js');
 PersonDeviceHelper = require('../helpers/PersonDeviceHelper.js');

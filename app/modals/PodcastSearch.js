@@ -10,7 +10,6 @@ import {
     Pressable,
     Platform,
 } from 'react-native';
-import ElementControl from '../controls/ElementControl.js';
 module.exports = class PodcastSearch extends Component {
     constructor(props) {
         super(props);
@@ -28,7 +27,6 @@ module.exports = class PodcastSearch extends Component {
     };
     async Show() {
         try {
-            global.root.NotificationModal.Show({ NotificationTitle: 'Loading...', NotificationStyle: 'Wait' });
             Global.State[this.props.ModelID] = {
                 SearchID: null,
                 SearchTimeout: null,
@@ -39,9 +37,9 @@ module.exports = class PodcastSearch extends Component {
                 PodcastList: [],
                 LazyLoadEnabled: false,
             }
-            this.forceUpdate();
             global.root.ActiveHandler();
-            global.root.NotificationModal.Hide();
+            this.Search(null);
+
         } catch (ex) {
             Global.State[this.props.ModelID] = null;
             global.Log({Message: 'PodcastSearch.Show>>' + ex.message, Notify: true});
@@ -60,53 +58,28 @@ module.exports = class PodcastSearch extends Component {
     async Search(SearchID_Value) {
         try {
             Global.State[this.props.ModelID].SearchOffset = 0;
+
             let _Params = {
                 SearchText: Global.State[this.props.ModelID].SearchText,
                 SearchLimit: Global.State[this.props.ModelID].SearchLimit,
                 SearchOffset: Global.State[this.props.ModelID].SearchOffset
             };
 
-            let _TransactionList = await TransactionHelper.GetList(_Params);
-            if (Global.State[this.props.ModelID] !== null
-            && (SearchID_Value === null || Global.State[this.props.ModelID].SearchID === SearchID_Value)) {
-                Global.State[this.props.ModelID].SearchCount = await TransactionHelper.GetCount(_Params);
-                Global.State[this.props.ModelID].TransactionList = _TransactionList;
-                this.forceUpdate();
-            }
-            this.forceUpdate();
+            //let _Url = 'https://smaps01.sitemesh.com/v1/podcast/list';
+            let _Url = 'http://127.0.0.1:5003/v1/podcast/list';
+
+            let _Response = await fetch(_Url, { body: JSON.stringify(_Params), method: 'POST', headers: Global.GetHeaders() });
+            if (_Response.ok) {
+                if (SearchID_Value === null || Global.State[this.props.ModelID]?.SearchID === SearchID_Value) {
+                    //Global.State[this.props.ModelID].SearchCount = await TransactionHelper.GetCount(_Params);
+                    Global.State[this.props.ModelID].TransactionList = await _Response.json();
+                    this.forceUpdate();
+                }                
+            } else {
+                throw Error(await _Response.text());
+            }            
         } catch (ex) {
             global.Log({Message: 'PodcastSearch.Search>>' + ex.message, Notify: true});
-        }
-    };
-    async Update(Transaction_Value) {
-        try {
-            let _Updated = false;
-            for (let _TransactionIndex = Global.State[this.props.ModelID].TransactionList.length - 1; _TransactionIndex >= 0; _TransactionIndex--) {
-                let _Transaction = Global.State[this.props.ModelID].TransactionList[_TransactionIndex];
-                if (_Transaction.TransactionID === Transaction_Value.TransactionID) {
-                    Global.State[this.props.ModelID].TransactionList.splice(_TransactionIndex, 1, TransactionHelper.Clone(Transaction_Value));
-                    _Updated = true;
-                }
-            }
-            if (!_Updated) {
-                Global.State[this.props.ModelID].TransactionList.push(TransactionHelper.Clone(Transaction_Value));
-            }
-            this.forceUpdate();
-        } catch (ex) {
-            global.Log({Message: 'PodcastSearch.Update>>' + ex.message});
-        }
-    };
-    async Delete(Transaction_Value) {
-        try {
-            for (let _TransactionIndex = Global.State[this.props.ModelID].TransactionList.length - 1; _TransactionIndex >= 0; _TransactionIndex--) {
-                let _Transaction = Global.State[this.props.ModelID].TransactionList[_TransactionIndex];
-                if (_Transaction.TransactionID === Transaction_Value.TransactionID) {
-                    Global.State[this.props.ModelID].TransactionList.splice(_TransactionIndex, 1);
-                }
-            }
-            this.forceUpdate();
-        } catch (ex) {
-            global.Log({Message: 'PodcastSearch.Delete>>' + ex.message});
         }
     };
     ClearFocus() {
@@ -179,7 +152,7 @@ module.exports = class PodcastSearch extends Component {
 
                         <FlatList 
                             style={{flex: 1, backgroundColor: Global.Theme.Body.BackgroundColor}} 
-                            data={Global.State[this.props.ModelID].TransactionList}
+                            data={Global.State[this.props.ModelID].PodcastList}
                             onScroll={() => {
                                 Global.State[this.props.ModelID].LazyLoadEnabled = true;
                             }}
@@ -216,32 +189,23 @@ module.exports = class PodcastSearch extends Component {
                                 }
                             }}
                             renderItem={({item, index, separators}) => {
-                                let _Transaction = Global.State[this.props.ModelID].TransactionList[index];
-
+                                let _Podcast = Global.State[this.props.ModelID].PodcastList[index];
+                                console.log(_Podcast);
                                 let _BorderColor = '#262626';
-                                if (_Transaction.TransactionPaymentType === 'unpaid') {
-                                    _BorderColor = '#ff392e'
-                                } else {
-                                    _BorderColor = Global.Theme.Highlight.BackgroundColor;
-                                }
 
                                 let _SeparatorUI = null;
 
-                                let _TransactionUI = (
+                                let _PodcastUI = (
                                     <Pressable 
-                                        key={'TransactionList_' + index}
-                                        onPress={() => global.root.ShowTransaction({
-                                            TransactionID: _Transaction.TransactionID,
-                                            SaveCallback: (Transaction_Value) => this.Update(Transaction_Value),
-                                            DeleteCallback: (TransactionID_Value) => this.Delete(TransactionID_Value)
+                                        key={'PodcastList_' + index}
+                                        onPress={() => global.root.ShowPodcast({
+                                            PodcastID: _Transaction.TransactionID
                                         })}
                                         style={({pressed}) => [{flex: 1, flexDirection: 'row', opacity: pressed ? .7 : 1, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, minHeight: 50, marginTop: (_SeparatorUI === null ? 10 : 0), marginLeft: 10, marginRight: 10}]}
                                     >
                                         <View style={{width: 3, backgroundColor: _BorderColor, borderRadius: 4, opacity: .5}}></View>
                                         <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
-                                            <Text style={{color: Global.Theme.Body.ForegroundFade, fontSize: 11}}>{_Transaction.TransactionAccount !== null ? _Transaction.TransactionAccount.AccountName : null}</Text>
-                                            <Text style={{color: Global.Theme.Body.ForegroundFade, fontSize: 11, marginTop: 4}}>${Global.FormatNumber(parseFloat(_Transaction.TransactionTotal * _Transaction.TransactionExchange), 2, '.' , ',')} on {Global.FormatShortDate(_TransactionDate.getFullYear(), _TransactionDate.getMonth() + 1, _TransactionDate.getDate()) + ' (' + (_Transaction.TransactionPaymentType === 'unpaid' ? 'Unpaid' : 'Paid') + ')'}</Text>
-                                            <Text style={{marginTop: 4, color: Global.Theme.Body.ForegroundColor}}>{_Transaction.TransactionNumber}</Text>
+                                            <Text style={{marginTop: 4, color: Global.Theme.Body.ForegroundColor}}>{_Podcast.PodcastID}</Text>
                                         </View>
                                         <View style={{width: 50, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={Global.Theme.Body.Icons.Forward} style={{width: 20, height: 20}} />
@@ -252,12 +216,12 @@ module.exports = class PodcastSearch extends Component {
                                 return (
                                     <View>
                                         {_SeparatorUI}
-                                        {_TransactionUI}
+                                        {_PodcastUI}
                                     </View>
                                 );
 
                             }}
-                            keyExtractor={item => item.TransactionID} 
+                            keyExtractor={item => item.PodcastID} 
                             ListEmptyComponent={() => {
                                 return (
                                     <View key={'No_Podcasts_Found'} style={{flex: 1, height: 50, margin: 10, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, alignItems: 'center', justifyContent: 'center'}}>
