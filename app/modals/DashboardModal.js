@@ -23,7 +23,6 @@ AuthenticateForm = require('../modals/AuthenticateForm.js');
 CalendarModal = require('../modals/CalendarModal.js');
 CombinedLogSearch = require('../modals/CombinedLogSearch.js');
 ConfirmModal = require('../modals/ConfirmModal.js');
-EmailForm = require('../modals/EmailForm.js');
 PersonDeviceForm = require('../modals/PersonDeviceForm.js');
 PersonForm = require('../modals/PersonForm.js');
 PersonPicker = require('../modals/PersonPicker.js');
@@ -156,7 +155,6 @@ module.exports = class DashboardModal extends Component {
         this.AuthenticateForm = null;
         this.CalendarModal = null;
         this.ConfirmModal = null;
-        this.EmailForm = null;
         this.NotificationModal = null;
         this.PickerModal = null;
         this.ProductSearch = null;
@@ -423,13 +421,6 @@ module.exports = class DashboardModal extends Component {
         } catch (ex) {
             global.Log({Message: 'DashboardModal.ShowAccount>>' + ex.message, Notify: true});
         }
-    };  
-    ShowEmail(Params_Value) {
-        try {
-            this.EmailForm.Show(Params_Value);            
-        } catch (ex) {
-            global.Log({Message: 'DashboardModal.ShowEmail>>' + ex.message, Notify: true});
-        }
     };
     ShowPerson(Params_Value) {
         try {
@@ -475,9 +466,6 @@ module.exports = class DashboardModal extends Component {
                 return true;
             } else if (this.ConfirmModal?.IsActive()) {
                 this.ConfirmModal.BackHandler();
-                return true;
-            } else if (this.EmailForm?.IsActive()) {
-                this.EmailForm.BackHandler();
                 return true;
             } else if (this.NotificationModal?.IsActive()) {
                 this.NotificationModal.BackHandler();
@@ -525,8 +513,6 @@ module.exports = class DashboardModal extends Component {
             let _ActiveWindow = false;
             if (this.AccountForm?.IsActive()) {
                 this.AccountForm.ActiveHandler();
-            } else if (this.EmailForm?.IsActive()) {
-                this.EmailForm.ActiveHandler();
             } else if (this.PersonForm?.IsActive()) {
                 this.PersonForm.ActiveHandler();
             } else if (this.ProductSearch?.IsActive()) {
@@ -715,7 +701,6 @@ module.exports = class DashboardModal extends Component {
                     <TransactionForm ref={ele => this.TransactionForm = ele} ModelID={this.props.ModelID + '_NJ52AJUS'} />
 
                     {/* Singleton Modals */}
-                    <EmailForm ref={ele => this.EmailForm = ele} ModelID={this.props.ModelID + '_E8S7TT3N'} />
                     <CalendarModal ref={ele => this.CalendarModal = ele} ModelID={this.props.ModelID + '_EKX98QNG'} />
                     <PickerModal ref={ele => this.PickerModal = ele} ModelID={this.props.ModelID + '_NKD35742'} />
                     <ConfirmModal ref={ele => this.ConfirmModal = ele} ModelID={this.props.ModelID + '_UJ6ZX5H6'} />
