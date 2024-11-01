@@ -67,12 +67,12 @@ module.exports = class PodcastSearch extends Component {
 
             //let _Url = 'https://smaps01.sitemesh.com/v1/podcast/list';
             let _Url = 'http://127.0.0.1:5003/v1/podcast/list';
-
             let _Response = await fetch(_Url, { body: JSON.stringify(_Params), method: 'POST', headers: Global.GetHeaders() });
             if (_Response.ok) {
-                if (SearchID_Value === null || Global.State[this.props.ModelID]?.SearchID === SearchID_Value) {
+                console.log(SearchID_Value)
+                if (SearchID_Value === null || Global.State[this.props.ModelID]?.SearchID === SearchID_Value) {                    
                     //Global.State[this.props.ModelID].SearchCount = await TransactionHelper.GetCount(_Params);
-                    Global.State[this.props.ModelID].TransactionList = await _Response.json();
+                    Global.State[this.props.ModelID].PodcastList = await _Response.json();
                     this.forceUpdate();
                 }                
             } else {
@@ -80,18 +80,6 @@ module.exports = class PodcastSearch extends Component {
             }            
         } catch (ex) {
             global.Log({Message: 'PodcastSearch.Search>>' + ex.message, Notify: true});
-        }
-    };
-    ClearFocus() {
-        try {
-            if (Platform.OS === 'macos') {
-                this.Titlebar.focus();
-                this.Titlebar.blur();
-            } else {
-                Keyboard.dismiss();
-            }
-        } catch (ex) {
-            global.Log({Message: 'PodcastSearch.ClearFocus>>' + ex.message});
         }
     };
 
@@ -198,14 +186,13 @@ module.exports = class PodcastSearch extends Component {
                                 let _PodcastUI = (
                                     <Pressable 
                                         key={'PodcastList_' + index}
-                                        onPress={() => global.root.ShowPodcast({
-                                            PodcastID: _Transaction.TransactionID
-                                        })}
+                                        onPress={() => global.root.ShowPodcast(_Podcast)}
                                         style={({pressed}) => [{flex: 1, flexDirection: 'row', opacity: pressed ? .7 : 1, backgroundColor: Global.Theme.Body.ControlBackground, borderRadius: 4, minHeight: 50, marginTop: (_SeparatorUI === null ? 10 : 0), marginLeft: 10, marginRight: 10}]}
                                     >
                                         <View style={{width: 3, backgroundColor: _BorderColor, borderRadius: 4, opacity: .5}}></View>
                                         <View style={{flex: 1, justifyContent: 'center', padding: 10}}>
-                                            <Text style={{marginTop: 4, color: Global.Theme.Body.ForegroundColor}}>{_Podcast.PodcastID}</Text>
+                                            <Text style={{marginTop: 4, color: Global.Theme.Body.ForegroundColor}}>{_Podcast.PodcastName}</Text>
+                                            <Text style={{marginTop: 4, color: Global.Theme.Body.ForegroundColor}}>{_Podcast.PodcastSummary}</Text>
                                         </View>
                                         <View style={{width: 50, alignItems: 'center', justifyContent: 'center'}}>
                                             <Image source={Global.Theme.Body.Icons.Forward} style={{width: 20, height: 20}} />

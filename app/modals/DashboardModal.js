@@ -38,7 +38,7 @@ TicketForm = require('../modals/TicketForm.js');
 TicketLogForm = require('../modals/TicketLogForm.js');
 VideoSearch = require('../modals/VideoSearch.js');
 TokenForm = require('../modals/TokenForm.js');
-TransactionForm = require('../modals/TransactionForm.js');
+PodcastForm = require('../modals/PodcastForm.js');
 PodcastSearch = require('../modals/PodcastSearch.js');
 NotificationModal = require('../modals/NotificationModal.js');
 
@@ -161,7 +161,7 @@ module.exports = class DashboardModal extends Component {
         this.ActivitySearch = null;
         this.EventSearch = null;
         this.VideoSearch = null;
-        this.TransactionForm = null;
+        this.PodcastForm = null;
         this.PodcastSearch = null;
         this.PersonForm = null;
         this.KeyboardOpen = false;
@@ -449,9 +449,9 @@ module.exports = class DashboardModal extends Component {
             global.Log({Message: 'DashboardModal.ShowTicket>>' + ex.message, Notify: true});
         }
     };
-    ShowTransaction(Params_Value) {
+    ShowPodcast(Params_Value) {
         try {
-            this.TransactionForm.Show(Params_Value);
+            this.PodcastForm.Show(Params_Value);
         } catch (ex) {
             global.Log({Message: 'DashboardModal.ShowTransaction>>' + ex.message, Notify: true});
         }
@@ -483,8 +483,8 @@ module.exports = class DashboardModal extends Component {
             } else if (this.ServiceForm?.IsActive()) {
                 this.ServiceForm.BackHandler();
                 return true;
-            } else if (this.TransactionForm?.IsActive()) {
-                this.TransactionForm.BackHandler();
+            } else if (this.PodcastForm?.IsActive()) {
+                this.PodcastForm.BackHandler();
                 return true;
             } else {
                 return true;
@@ -522,8 +522,8 @@ module.exports = class DashboardModal extends Component {
                 this.ServiceForm.ActiveHandler();
             } else if (this.TicketForm?.IsActive()) {
                 this.TicketForm.ActiveHandler();
-            } else if (this.TransactionForm?.IsActive()) {
-                this.TransactionForm.ActiveHandler();
+            } else if (this.PodcastForm?.IsActive()) {
+                this.PodcastForm.ActiveHandler();
             } else if (!global.GlobalModalActive) {
                 _ActiveWindow = true;
             }
@@ -697,7 +697,7 @@ module.exports = class DashboardModal extends Component {
                     <ReleaseForm ref={ele => this.ReleaseForm = ele} ModelID={this.props.ModelID + '_RF1VV5C1'} />
                     <ServiceForm ref={ele => this.ServiceForm = ele} ModelID={this.props.ModelID + '_U48MQ3CT'} />                  
                     <TicketForm ref={ele => this.TicketForm = ele} ModelID={this.props.ModelID + '_0ZJQ95YN'} />
-                    <TransactionForm ref={ele => this.TransactionForm = ele} ModelID={this.props.ModelID + '_NJ52AJUS'} />
+                    <PodcastForm ref={ele => this.PodcastForm = ele} ModelID={this.props.ModelID + '_PF52AJUS'} />
 
                     {/* Singleton Modals */}
                     <CalendarModal ref={ele => this.CalendarModal = ele} ModelID={this.props.ModelID + '_EKX98QNG'} />
